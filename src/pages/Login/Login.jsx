@@ -1,15 +1,37 @@
 import React, { useState } from 'react'
 import classes from './Login.module.css'
 import { useNavigate } from 'react-router-dom'
+import {login} from '../../firebase'
 
 const Login = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const [password, setPassword] = useState();
+  const [error, setError] = useState(null);
+
+
+  const submitHandler = (e) => {
+    if(!email || !password){
+      setError('Invalid Entry')
+      return;
+
+      const message = login(email,password);
+      if(message){
+        setError(message)
+/*         navigate('./login')
+        return; */
+      } else{
+        setError(null)
+        navigate('./home')
+      }
+
+    }
+  }
   return (
     <div className={`page ${classes.Login}`}>
       <div className={classes.LoginForm}>
         <h1>Login</h1>
+        {error&&<p className='text-danger text-center m-3'>{error}</p>}
         <form>
           <div className='mb-3'>
             <label htmlFor="email" className='form-label text-light'>Email</label>
@@ -23,7 +45,7 @@ const Login = () => {
             Forgot Password?
           </div>
           <div className='d-grid'>
-            <button type='button' className='btn btn-primary form-control mt-3'>Login</button>
+            <button type='button' className='btn btn-primary form-control mt-3' onClick={submitHandler}>Login</button>
           </div>
 
         </form>
@@ -35,3 +57,5 @@ const Login = () => {
 }
 
 export default Login
+
+/* 2.39 */
